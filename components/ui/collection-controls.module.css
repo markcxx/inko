@@ -17,7 +17,7 @@
 .tabs button { gap: 8px; padding: 10px 0 15px; font-size: 14px; color: var(--muted); }
 .tabs button:hover { color: var(--fg); background: transparent; }
 .tabs button[aria-pressed="true"] { color: var(--fg); font-weight: 600; }
-.tabs .indicator { bottom: 0; height: 2px; border-radius: 2px; background: #8589cb; }
+.tabs .indicator { bottom: 0; height: 2px; border-radius: 2px; background: var(--accent); }
 .badge { font-size: 11px; min-width: 23px; padding: 1px 7px; border-radius: 6px; line-height: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .segment { padding: 3px; border: 1px solid var(--line); border-radius: 9px; gap: 0; }
 .segment button { padding: 6px 12px; gap: 7px; font-size: 13px; color: var(--muted); background: transparent; }

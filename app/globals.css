@@ -270,3 +270,21 @@ html::-webkit-scrollbar { width: 0; height: 0; display: none; }
   .sidebar-resize-handle { display: none; }
   .heading-actions { width: auto; margin-left: auto; }
 }
+
+/* Shared tooltip for icon actions, controls, and calendar cells. */
+.global-tooltip { --tooltip-surface: #242426; position: fixed; z-index: 1000; max-width: min(280px, calc(100vw - 20px)); padding: 8px 12px; border: 1px solid #ffffff0d; border-radius: 9px; color: #f7f7f8; background: var(--tooltip-surface); font-size: 12px; font-weight: 400; line-height: 1.6; letter-spacing: .1px; overflow-wrap: anywhere; text-align: left; pointer-events: none; box-shadow: 0 4px 14px #00000018, 0 1px 3px #0000000d; animation: tooltip-enter .15s ease-out both; }
+.global-tooltip-dark { --tooltip-surface: #f3f3f5; color: #252528; border-color: #ffffffb3; box-shadow: 0 4px 18px #0003; }
+.global-tooltip-arrow { position: absolute; left: var(--tooltip-arrow-x, 50%); bottom: -4px; width: 8px; height: 8px; border-radius: 1px; background: var(--tooltip-surface); transform: translateX(-50%) rotate(45deg); }
+.global-tooltip[data-side="bottom"] .global-tooltip-arrow { bottom: auto; top: -4px; }
+@keyframes tooltip-enter { from { opacity: 0; translate: 0 3px; } to { opacity: 1; translate: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .global-tooltip { animation: none; } }
+
+/* Sidebar moves as one panel while the content follows its width. */
+@media (min-width: 761px) {
+  .workspace { transition: grid-template-columns 440ms cubic-bezier(.22, 1, .36, 1); }
+  .workspace .sidebar { display: flex; width: var(--sidebar-expanded-width, 232px); clip-path: inset(0); opacity: 1; transition: clip-path 440ms cubic-bezier(.22, 1, .36, 1), opacity 260ms ease; }
+  .workspace.hide-sidebar .sidebar { display: flex; clip-path: inset(0 100% 0 0); opacity: 0; pointer-events: none; }
+  .sidebar-resize-handle { transition: left 440ms cubic-bezier(.22, 1, .36, 1); }
+  .workspace.resizing-sidebar, .resizing-sidebar .sidebar, .resizing-sidebar .sidebar-resize-handle { transition: none; }
+}
+@media (prefers-reduced-motion: reduce) { .workspace, .workspace .sidebar, .sidebar-resize-handle { transition: none; } }

@@ -27,11 +27,6 @@
 .selection span { display: flex; align-items: center; gap: 6px; margin-right: auto; }
 .selection button { font-size: 12px; }
 .table { table-layout: fixed; }
-.table th:nth-child(2) { width: auto; }
-.table th:nth-child(3) { width: 100px; }
-.table th:nth-child(4) { width: 86px; }
-.table th:nth-child(5) { width: 90px; }
-.table th:nth-child(6) { width: 120px; }
 .table tr { cursor: default; }
 .table .number { text-align: right; font-variant-numeric: tabular-nums; }
 .table .actionsCell { width: 164px; padding-right: 20px; }
@@ -87,3 +82,68 @@
 .newTitle textarea { display: block; width: 100%; padding: 12px; margin-top: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); resize: vertical; outline-color: #9ca6ef; }
 .workflowNote { padding: 13px 15px; border-radius: 9px; background: var(--card); color: var(--muted); font-size: 13px; margin-top: 20px; }
 @media(prefers-reduced-motion:reduce) { .rowActions { transition: none; } }
+
+/* Stable toolbar and a denser editorial table. */
+.toolbar { display: grid; grid-template-columns: minmax(180px, 320px) 132px 132px 1fr; gap: 12px; }
+.search { width: 100%; min-width: 0; max-width: 320px; }
+.viewSwitch { justify-self: end; margin: 0; }
+.table { min-width: 980px; }
+.table .titleCell { width: 34%; }
+.table .topicCell { width: 11%; }
+.table .number { width: 8%; }
+.table .layoutCell { width: 11%; }
+.table .statusCell { width: 10%; }
+.table .dateCell { width: 12%; }
+.table .actionsCell { width: 154px; padding-right: 20px; }
+.articleTitle { gap: 11px; width: 100%; }
+.tableCover { position: relative; display: block; flex: 0 0 42px; width: 42px; height: 42px; overflow: hidden; border-radius: 6px; }
+.tableCover .placeholder span { display: none; }
+.tableCover .placeholder svg { width: 20px; height: 20px; color: #a0a7b3; }
+.articleTitle .titleCopy { display: block; min-width: 0; white-space: normal; text-align: left; }
+.titleCopy strong { display: block; font-size: 13px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.titleCopy small { display: block; color: var(--muted); font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; }
+.layoutName { font-size: 11px; color: var(--muted); }
+.actionLabel { display: none; }
+/* Cover status, readable metadata, and a rising action dock. */
+.card { position: relative; overflow: hidden; border-radius: 14px; transition: border-color .25s, box-shadow .25s; }
+.card:hover { border-color: #b6bfd1; box-shadow: 0 8px 24px #1c1c1c06; }
+.cover { aspect-ratio: 2.1; border-radius: 13px 13px 0 0; }
+.cardStatus { position: absolute; top: 12px; right: 12px; padding: 4px 9px; border-radius: 7px; background: var(--bg); box-shadow: 0 2px 8px #0000000a; font-size: 11px; }
+.cardBody { padding: 18px 18px 0; }
+.cardEyebrow { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.cardEyebrow .topic { margin: 0; padding: 2px 7px; border-radius: 5px; background: var(--card); font-size: 11px; }
+.cardEyebrow > span:last-child { display: flex; align-items: center; gap: 4px; font-size: 11px; color: var(--muted); }
+.cardTitle { height: 48px; font-size: 15px; }
+.cardBody > p { margin-top: 6px; font-size: 12px; }
+.cardFooter > span { display: inline-flex; align-items: center; gap: 5px; }
+.cardFooter { display: flex; justify-content: space-between; align-items: center; min-height: 46px; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); }
+.cardActions { position: absolute; left: 10px; right: 10px; bottom: 9px; opacity: 0; transform: translateY(15px); transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .2s; pointer-events: none; }
+.cardActions .rowActions { padding: 5px; border-radius: 10px; background: var(--bg); box-shadow: 0 -4px 18px #00000008; border: 1px solid var(--line); opacity: 1; transform: none; gap: 5px; }
+.cardActions .rowActions button { width: 34px; height: 32px; }
+.cardActions .rowActions button:nth-child(2) { display: flex; justify-content: center; gap: 7px; width: auto; flex: 1; background: var(--fg); color: var(--bg); order: -1; padding: 0 10px; font-size: 12px; }
+.cardActions .rowActions button:nth-child(2) .actionLabel { display: inline; }
+.card:hover .cardActions, .card:focus-within .cardActions { opacity: 1; transform: translateY(0); pointer-events: auto; }
+@media (max-width: 1000px) { .toolbar { grid-template-columns: minmax(180px, 1fr) 132px auto; } .toolbar > .search { grid-column: 1 / -1; max-width: none; } .toolbar > .viewSwitch { grid-column: 3; } }
+@media (max-width: 520px) { .toolbar { grid-template-columns: 1fr 1fr; gap: 10px; } .toolbar > .viewSwitch { grid-column: 1 / -1; } .cardTitle { height: auto; min-height: 24px; } }
+@media (hover: none) { .cardActions { position: static; opacity: 1; transform: none; pointer-events: auto; padding: 0 10px 10px; } }
+@media (prefers-reduced-motion: reduce) { .card, .cardActions { transition: none; } }
+
+/* One readable type scale throughout the article table. */
+.table { font-size: 13px; }
+.table th, .table td, .table button, .table strong, .table small, .table :global(.status), .table .layoutName { font-size: inherit; line-height: 1.6; }
+.table td { color: color-mix(in srgb, var(--fg) 78%, var(--bg)); }
+.table .titleCopy strong { color: var(--fg); font-weight: 500; }
+.table .titleCopy small { color: var(--muted); font-weight: 400; }
+.table .muted, .table .layoutName { color: color-mix(in srgb, var(--fg) 65%, var(--bg)); }
+.table th { font-size: 14px; color: color-mix(in srgb, var(--fg) 88%, var(--bg)); font-weight: 500; }
+
+/* Card and table views use the same type and color hierarchy. */
+.card { font-size: 13px; }
+.cardTitle, .cardBody > p, .cardEyebrow .topic, .cardEyebrow > span:last-child, .cardFooter, .cardStatus { font-size: inherit; line-height: 1.6; }
+.cardTitle { color: var(--fg); font-weight: 600; height: 42px; }
+.cardEyebrow { margin-bottom: 12px; }
+.cardEyebrow .topic, .cardEyebrow > span:last-child, .cardFooter { color: color-mix(in srgb, var(--fg) 65%, var(--bg)); }
+.cardBody > p { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 42px; margin: 6px 0 18px; color: var(--muted); }
+.cardStatus { padding: 4px 9px; }
+.cardActions .rowActions button:nth-child(2) { font-size: 13px; }
+@media(max-width:520px) { .cardTitle { height: auto; min-height: 21px; } }

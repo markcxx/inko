@@ -10,7 +10,7 @@ import EmptyState from "@/components/ui/empty-state";
 import useSidebarResize from "@/components/ui/use-sidebar-resize";
 import { demoDataset, periods, type Article } from "@/lib/analytics";
 import IconButton from "@/components/ui/icon-button";
-import { ArrowUpRight, House, Check, ChevronDown, ChevronRight, CircleHelp, Feather, FileText, ImageIcon, LayoutTemplate, Lightbulb, Moon, PanelLeft, Plus, Search, Settings2, Star, Sun, Telescope, X, type LucideIcon } from "lucide-react";
+import { ArrowUpRight, House, Check, ChevronDown, ChevronRight, CircleHelp, Feather, FileText, ImageIcon, LayoutTemplate, Lightbulb, Moon, PanelLeft, Plus, Search, Settings2, Sun, Telescope, X, type LucideIcon } from "lucide-react";
 
 const nav: [string, LucideIcon][] = [["首页", House], ["文章库", FileText], ["创作偏好", Settings2], ["排版模板", LayoutTemplate]];
 const actions: [LucideIcon, string, string][] = [[Feather, "开始写作", "把想法写成好文章"], [Lightbulb, "发现选题", "寻找下一个好灵感"], [Telescope, "深度调研", "让观点有据可依"], [ImageIcon, "生成配图", "让内容更有画面"]];
@@ -20,7 +20,7 @@ export default function Workspace({ page = "home" }: { page?: "home" | "articles
   const sidebar = useSidebarResize();
   const [period, setPeriod] = useState("7"), [search, setSearch] = useState(""), [tab, setTab] = useState("最近编辑");
   const [modal, setModal] = useState<string | null>(null), [draft, setDraft] = useState(""), [saved, setSaved] = useState<Article[]>([]);
-  const [notice, setNotice] = useState(""), [favorite, setFavorite] = useState(false);
+  const [notice, setNotice] = useState("");
   useEffect(() => { const id = setTimeout(() => setNotice(""), 3500); return () => clearTimeout(id); }, [notice]);
   useEffect(() => { if (!modal) return; const handler = (e: KeyboardEvent) => { if (e.key === "Escape") setModal(null); }; window.addEventListener("keydown", handler); return () => window.removeEventListener("keydown", handler); }, [modal]);
   const [now, setNow] = useState(() => new Date(0));
@@ -41,18 +41,17 @@ export default function Workspace({ page = "home" }: { page?: "home" | "articles
     try { localStorage.setItem("inko.articles", JSON.stringify(next)); } catch { setNotice("保存失败：浏览器存储不可用"); return; }
     setNow(new Date()); setSaved(next); setModal(null); setTab("最近编辑"); setSearch(""); setNotice("草稿已保存在本机，统计已更新");
   };
-  return <div className={`workspace ${dark ? "dark" : ""} ${!sidebar.open ? "hide-sidebar" : ""} ${sidebar.dragging ? "resizing-sidebar" : ""}`} style={{ "--sidebar-width": `${sidebar.open ? sidebar.width : 0}px` } as CSSProperties}>
-    <aside className="sidebar">
+  return <div className={`workspace ${dark ? "dark" : ""} ${!sidebar.open ? "hide-sidebar" : ""} ${sidebar.dragging ? "resizing-sidebar" : ""}`} style={{ "--sidebar-width": `${sidebar.open ? sidebar.width : 0}px`, "--sidebar-expanded-width": `${sidebar.width}px` } as CSSProperties}>
+    <aside className="sidebar" inert={!sidebar.open}>
       <div className="sidebar-header"><Link className="brand" href="/" aria-label="inko 首页"><span className="brand-symbol">✳</span><span className="brand-copy"><span className="brand-wordmark">inko</span><span className="brand-caption">创作，由此发生</span></span></Link></div>
       <div className="sidebar-navigation">
-      <div className="side-section"><div className="side-tabs"><span>收藏</span><span>最近访问</span></div>{["长期主义写作笔记", "AI 时代的创作方法", ...(favorite ? ["首页"] : [])].map(name => <button key={name} className="favorite-link" onClick={() => name === "首页" ? window.scrollTo({ top: 0, behavior: "smooth" }) : open(name)}><i />{name}</button>)}</div>
-      <div className="nav-heading">创作工作台</div><nav>{nav.map(([name, Icon]) => name === "首页" || name === "文章库" ? <Link key={name} href={name === "首页" ? "/" : "/articles"} className={`nav-item ${name === pageTitle ? "selected" : ""}`} aria-current={name === pageTitle ? "page" : undefined}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></Link> : <button key={name} className="nav-item" onClick={() => open(name)}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></button>)}</nav>
+      <nav>{nav.map(([name, Icon]) => name === "首页" || name === "文章库" ? <Link key={name} href={name === "首页" ? "/" : "/articles"} className={`nav-item ${name === pageTitle ? "selected" : ""}`} aria-current={name === pageTitle ? "page" : undefined}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></Link> : <button key={name} className="nav-item" onClick={() => open(name)}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></button>)}</nav>
 
       </div>
       <div className="sidebar-bottom"><details className="account-menu"><summary className="workspace-name account-button" aria-label="账号信息：Mark，mark@inko.app"><span className="avatar">M</span><span className="account-copy"><strong>Mark</strong><small>mark@inko.app</small></span><ChevronDown size={13} /></summary><div className="account-menu-panel"><span>Mark · 个人账号</span><button onClick={() => open("设置")}><Settings2 size={16} />设置</button></div></details></div>
     </aside>
-    <div className="sidebar-resize-handle" role="separator" aria-label="调整导航栏宽度" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={420} aria-valuenow={sidebar.open ? Math.round(sidebar.width) : 0} aria-valuetext={sidebar.open ? `${Math.round(sidebar.width)} 像素` : "已收起"} tabIndex={0} title="拖动调整宽度，向左拖窄收起；双击收起或展开" {...sidebar.handleProps} />
-    <div className="center-column"><header className="topbar"><div className="header-left"><IconButton icon={PanelLeft} label={sidebar.open ? "收起导航栏" : "展开导航栏"} onClick={sidebar.toggle} /><IconButton icon={Star} label="收藏看板" active={favorite} onClick={() => { setFavorite(!favorite); setNotice(favorite ? "已取消收藏" : "首页已加入收藏"); }} /><span className="breadcrumb">工作台</span><span className="slash">/</span><span>{pageTitle}</span></div><div className="header-right"><div className="global-search"><Search size={15} /><input aria-label="搜索文章" placeholder="搜索内容…" value={search} onChange={e => setSearch(e.target.value)} /><span className="search-hint">搜索</span></div><IconButton icon={dark ? Moon : Sun} label="切换明暗主题" onClick={() => setDark(!dark)} /></div></header>
+    <div className="sidebar-resize-handle" role="separator" aria-label="调整导航栏宽度" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={420} aria-valuenow={sidebar.open ? Math.round(sidebar.width) : 0} aria-valuetext={sidebar.open ? `${Math.round(sidebar.width)} 像素` : "已收起"} tabIndex={0} data-tooltip="拖动调整宽度，向左拖窄收起；双击收起或展开" {...sidebar.handleProps} />
+    <div className="center-column"><header className="topbar"><div className="header-left"><IconButton icon={PanelLeft} label={sidebar.open ? "收起导航栏" : "展开导航栏"} onClick={sidebar.toggle} /><span className="breadcrumb">工作台</span><span className="slash">/</span><span>{pageTitle}</span></div><div className="header-right"><div className="global-search"><Search size={15} /><input aria-label="搜索文章" placeholder="搜索内容…" value={search} onChange={e => setSearch(e.target.value)} /><span className="search-hint">搜索</span></div><IconButton icon={dark ? Moon : Sun} label="切换明暗主题" onClick={() => setDark(!dark)} /></div></header>
       {page === "articles" ? <ArticleLibrary globalSearch={search} /> : <main><div className="page-heading"><h1>创作概览 <span>让好内容持续发生。</span></h1><div className="heading-actions"><Select label="统计时间范围" value={period} onChange={setPeriod} options={periods} /><button className="primary-button" onClick={() => open("新建文章")}><Plus size={15} />新建创作</button></div></div>
 
       <Overview data={dataset} dark={dark} days={Number(period)} now={now} />

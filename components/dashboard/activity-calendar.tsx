@@ -42,7 +42,7 @@ export default function ActivityCalendar({ data, now }: { data: Dataset; now: Da
             <span className="activity-month">{months[index]}</span>
             {week.map(day => day.outside ? <span key={day.key} className="activity-cell outside" aria-hidden="true" /> :
               <span key={day.key} className={`activity-cell level-${day.level}`} tabIndex={0} role="img"
-                aria-label={`${day.key}，${day.count} 条创作记录`} title={`${day.key} · ${day.count} 条创作记录`} />)}
+                aria-label={`${day.key}，${day.count} 条创作记录`} data-tooltip={`${day.key} · ${day.count} 条创作记录`} />)}
           </div>)}
         </div>
       </div>

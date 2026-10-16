@@ -8,6 +8,7 @@ export type LibraryArticle = {
   excerpt: string;
   cover: number | null;
   updatedAt: string;
+  layout?: string;
 };
 export const statusColors: Record<LibraryStatus, string> = { 草稿: "gray", 创作中: "purple", 待审阅: "blue", 已完成: "green" };
 const examples: Omit<LibraryArticle, "id" | "updatedAt">[] = [
@@ -24,7 +25,7 @@ const moreTitles = ["写作是一场与自己的对话", "建立一个真正能�
 export const libraryArticles: LibraryArticle[] = [
   ...examples,
   ...moreTitles.map((title, index) => ({ ...examples[index % examples.length], title, status: (index < 4 ? "草稿" : index < 7 ? "创作中" : index === 7 ? "待审阅" : "已完成") as LibraryStatus, words: 950 + index * 127 })),
-].map((article, index) => ({ ...article, id: `article-${index + 1}`, updatedAt: new Date(Date.UTC(2026, 9, 16 - Math.floor(index / 2), index % 2 ? 3 : 6, index % 2 ? 8 : 32)).toISOString() }));
+].map((article, index) => ({ ...article, layout: ["简约留白", "阅读手记", "自然叙事"][index % 3], id: `article-${index + 1}`, updatedAt: new Date(Date.UTC(2026, 9, 16 - Math.floor(index / 2), index % 2 ? 3 : 6, index % 2 ? 8 : 32)).toISOString() }));
 export function editedLabel(date: string) {
   const day = date.slice(0, 10);
   const time = new Intl.DateTimeFormat("zh-CN", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Shanghai", hour12: false }).format(new Date(date));
