@@ -1,3 +1,8 @@
+## 本地运行约定
+
+- 用户已授权直接安装项目依赖并启动项目，无需重复确认。
+- 开发和生产启动默认使用端口 `3010`，访问地址为 `http://localhost:3010`。
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

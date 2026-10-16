@@ -1,0 +1,44 @@
+.checkbox { position: relative; display: inline-flex; width: 18px; height: 18px; flex: 0 0 18px; vertical-align: middle; }
+.checkbox input { appearance: none; position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; border: 1.5px solid #bac1cd; border-radius: 5px; background: var(--bg, #fff); cursor: pointer; transition: background .18s, border-color .18s, box-shadow .18s, transform .18s; }
+.checkbox input:hover { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 8%, transparent); }
+.checkbox input:active { transform: scale(.88); }
+.checkbox input:checked, .checkbox input:indeterminate { background: var(--accent); border-color: var(--accent); }
+.checkbox input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.checkbox svg { width: 16px; height: 16px; position: absolute; inset: 1px; pointer-events: none; fill: none; stroke: var(--bg); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.tick { stroke-dasharray: 15; stroke-dashoffset: 15; opacity: 0; transition: stroke-dashoffset .24s, opacity .15s; }
+.dash { opacity: 0; transform-origin: center; transform: scaleX(.4); transition: opacity .15s, transform .2s; }
+.checkbox input:checked + svg .tick { stroke-dashoffset: 0; opacity: 1; }
+.checkbox input:indeterminate + svg .tick { opacity: 0; }
+.checkbox input:indeterminate + svg .dash { opacity: 1; transform: scaleX(1); }
+.options { position: relative; display: flex; align-items: center; width: max-content; isolation: isolate; }
+.options button { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; white-space: nowrap; }
+.indicator { position: absolute; left: 0; pointer-events: none; transition: transform .32s cubic-bezier(.22,1,.36,1), width .32s cubic-bezier(.22,1,.36,1); }
+.tabs { gap: 28px; padding-bottom: 1px; }
+.tabs button { gap: 8px; padding: 10px 0 15px; font-size: 14px; color: var(--muted); }
+.tabs button:hover { color: var(--fg); background: transparent; }
+.tabs button[aria-pressed="true"] { color: var(--fg); font-weight: 600; }
+.tabs .indicator { bottom: 0; height: 2px; border-radius: 2px; background: #8589cb; }
+.badge { font-size: 11px; min-width: 23px; padding: 1px 7px; border-radius: 6px; line-height: 19px; font-weight: 600; font-variant-numeric: tabular-nums; }
+.segment { padding: 3px; border: 1px solid var(--line); border-radius: 9px; gap: 0; }
+.segment button { padding: 6px 12px; gap: 7px; font-size: 13px; color: var(--muted); background: transparent; }
+.segment button[aria-pressed="true"] { color: var(--fg); }
+.segment .indicator { top: 3px; bottom: 3px; border-radius: 6px; background: var(--hover); box-shadow: 0 1px 3px #00000008; }
+.tableWrap { overflow-x: auto; }
+.table { width: 100%; min-width: 920px; }
+.table th, .table td { padding: 13px 12px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.table th { color: var(--muted); font-weight: 400; }
+.table td { height: 64px; }
+.table tr[data-selected] { background: #8589cb09; }
+.table .checkCell { width: 54px; padding-left: 20px; padding-right: 16px; }
+.pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 26px; gap: 18px; color: var(--muted); font-size: 13px; }
+.pagination nav { display: flex; align-items: center; gap: 6px; }
+.pagination button { width: 30px; height: 32px; border-radius: 6px; display: grid; place-items: center; font-size: 13px; transition: background .18s, color .18s, transform .18s; }
+.pagination button:active { transform: scale(.9); }
+.pagination button[aria-current="page"] { background: var(--fg); color: var(--bg); }
+.pagination :global(.select) { margin-right: 12px; }
+.pagination :global(.select-trigger) { width: auto; font-size: 12px; min-width: 110px; display: flex; }
+.pagination :global(.select-menu) { top: auto; bottom: calc(100% + 7px); }
+.pageItem { display: flex; align-items: center; }
+.ellipsis { padding: 0 5px; }
+@media(max-width:760px) { .pagination { flex-direction: column; align-items: flex-start; } .pagination nav { flex-wrap: wrap; } .tabs { gap: 22px; } }
+@media(prefers-reduced-motion:reduce) { .indicator, .checkbox input, .tick, .dash, .pagination button { transition: none; } }

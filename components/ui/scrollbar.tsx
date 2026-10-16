@@ -1,8 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Scrollbar() {
+  const [metrics, setMetrics] = useState({ top: 0, height: 0, range: 0, track: 0 });
+  const [dragging, setDragging] = useState(false);
+  const drag = useRef<{ y: number; scroll: number } | null>(null);
+  useEffect(() => {
+    const measure = () => {
+      const root = document.documentElement;
+      const track = window.innerHeight;
+      const range = Math.max(0, root.scrollHeight - track);
+      const height = Math.min(track, Math.max(36, track * track / root.scrollHeight));
+      setMetrics({ top: range ? window.scrollY / range * (track - height) : 0, height, range, track });
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(document.body);
+    window.addEventListener("scroll", measure, { passive: true });
+    window.addEventListener("resize", measure);
+    measure();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", measure);
+      window.removeEventListener("resize", measure);
+    };
+  }, []);
   useEffect(() => {
     let active: Element | null = null;
     const activate = (element: Element | null) => {
@@ -51,5 +73,36 @@ export default function Scrollbar() {
       window.removeEventListener("blur", clear);
     };
   }, []);
-  return null;
+  return metrics.range > 0 ? <div className={`page-scrollbar${dragging ? " is-dragging" : ""}`}>
+    <div className="page-scrollbar-thumb" role="scrollbar" aria-label="页面滚动条"
+      aria-orientation="vertical" aria-valuemin={0} aria-valuemax={Math.round(metrics.range)}
+      aria-valuenow={Math.round(metrics.top / Math.max(1, metrics.track - metrics.height) * metrics.range)}
+      aria-controls="page-content" tabIndex={0}
+      style={{ top: metrics.top, height: metrics.height }}
+      onPointerDown={event => {
+        if (event.button !== 0) return;
+        event.preventDefault();
+        drag.current = { y: event.clientY, scroll: window.scrollY };
+        setDragging(true);
+        event.currentTarget.setPointerCapture(event.pointerId);
+      }}
+      onPointerMove={event => {
+        if (!drag.current) return;
+        const distance = Math.max(1, metrics.track - metrics.height);
+        window.scrollTo(0, drag.current.scroll + (event.clientY - drag.current.y) * metrics.range / distance);
+      }}
+      onPointerUp={event => {
+        drag.current = null;
+        setDragging(false);
+        if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
+      }}
+      onLostPointerCapture={() => { drag.current = null; setDragging(false); }}
+      onPointerCancel={() => { drag.current = null; setDragging(false); }}
+      onKeyDown={event => {
+        const delta = { ArrowDown: 40, ArrowUp: -40, PageDown: window.innerHeight * .9, PageUp: -window.innerHeight * .9 }[event.key];
+        if (delta !== undefined) { event.preventDefault(); window.scrollBy(0, delta); }
+        if (event.key === "Home" || event.key === "End") { event.preventDefault(); window.scrollTo(0, event.key === "Home" ? 0 : metrics.range); }
+      }}
+    />
+  </div> : null;
 }

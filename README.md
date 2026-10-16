@@ -1,4 +1,4 @@
-# inko 墨可
+# inko创作空间
 
 面向公众号创作者的 AI 内容创作工作台。当前已完成首页看板、统计可视化、明暗主题和本地草稿管理，AI 服务尚未接入。
 
@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-访问 http://localhost:3000。
+访问 http://localhost:3010。开发和生产启动默认端口均为 `3010`。
 
 ```sh
 pnpm build
