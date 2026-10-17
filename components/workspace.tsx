@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, type CSSProperties } from "react";
 import Link from "next/link";
+import TemplateLibrary from "@/components/templates/template-library";
 import ArticleLibrary from "@/components/articles/article-library";
 import "@fontsource/geo/400.css";
 import Overview from "@/components/dashboard/overview";
@@ -14,8 +15,8 @@ import { ArrowUpRight, House, Check, ChevronDown, ChevronRight, CircleHelp, Feat
 
 const nav: [string, LucideIcon][] = [["首页", House], ["文章库", FileText], ["创作偏好", Settings2], ["排版模板", LayoutTemplate]];
 const actions: [LucideIcon, string, string][] = [[Feather, "开始写作", "把想法写成好文章"], [Lightbulb, "发现选题", "寻找下一个好灵感"], [Telescope, "深度调研", "让观点有据可依"], [ImageIcon, "生成配图", "让内容更有画面"]];
-export default function Workspace({ page = "home" }: { page?: "home" | "articles" }) {
-  const pageTitle = page === "articles" ? "文章库" : "首页";
+export default function Workspace({ page = "home" }: { page?: "home" | "articles" | "templates" }) {
+  const pageTitle = page === "templates" ? "排版模板" : page === "articles" ? "文章库" : "首页";
   const [dark, setDark] = useState(false);
   const sidebar = useSidebarResize();
   const [period, setPeriod] = useState("7"), [search, setSearch] = useState(""), [tab, setTab] = useState("最近编辑");
@@ -45,14 +46,14 @@ export default function Workspace({ page = "home" }: { page?: "home" | "articles
     <aside className="sidebar" inert={!sidebar.open}>
       <div className="sidebar-header"><Link className="brand" href="/" aria-label="inko 首页"><span className="brand-symbol">✳</span><span className="brand-copy"><span className="brand-wordmark">inko</span><span className="brand-caption">创作，由此发生</span></span></Link></div>
       <div className="sidebar-navigation">
-      <nav>{nav.map(([name, Icon]) => name === "首页" || name === "文章库" ? <Link key={name} href={name === "首页" ? "/" : "/articles"} className={`nav-item ${name === pageTitle ? "selected" : ""}`} aria-current={name === pageTitle ? "page" : undefined}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></Link> : <button key={name} className="nav-item" onClick={() => open(name)}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></button>)}</nav>
+      <nav>{nav.map(([name, Icon]) => name === "首页" || name === "文章库" || name === "排版模板" ? <Link key={name} href={name === "首页" ? "/" : name === "排版模板" ? "/templates" : "/articles"} className={`nav-item ${name === pageTitle ? "selected" : ""}`} aria-current={name === pageTitle ? "page" : undefined}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></Link> : <button key={name} className="nav-item" onClick={() => open(name)}><Icon size={19} strokeWidth={1.65} /><span>{name}</span></button>)}</nav>
 
       </div>
       <div className="sidebar-bottom"><details className="account-menu"><summary className="workspace-name account-button" aria-label="账号信息：Mark，mark@inko.app"><span className="avatar">M</span><span className="account-copy"><strong>Mark</strong><small>mark@inko.app</small></span><ChevronDown size={13} /></summary><div className="account-menu-panel"><span>Mark · 个人账号</span><button onClick={() => open("设置")}><Settings2 size={16} />设置</button></div></details></div>
     </aside>
     <div className="sidebar-resize-handle" role="separator" aria-label="调整导航栏宽度" aria-orientation="vertical" aria-valuemin={0} aria-valuemax={420} aria-valuenow={sidebar.open ? Math.round(sidebar.width) : 0} aria-valuetext={sidebar.open ? `${Math.round(sidebar.width)} 像素` : "已收起"} tabIndex={0} data-tooltip="拖动调整宽度，向左拖窄收起；双击收起或展开" {...sidebar.handleProps} />
-    <div className="center-column"><header className="topbar"><div className="header-left"><IconButton icon={PanelLeft} label={sidebar.open ? "收起导航栏" : "展开导航栏"} onClick={sidebar.toggle} /><span className="breadcrumb">工作台</span><span className="slash">/</span><span>{pageTitle}</span></div><div className="header-right"><div className="global-search"><Search size={15} /><input aria-label="搜索文章" placeholder="搜索内容…" value={search} onChange={e => setSearch(e.target.value)} /><span className="search-hint">搜索</span></div><IconButton icon={dark ? Moon : Sun} label="切换明暗主题" onClick={() => setDark(!dark)} /></div></header>
-      {page === "articles" ? <ArticleLibrary globalSearch={search} /> : <main><div className="page-heading"><h1>创作概览 <span>让好内容持续发生。</span></h1><div className="heading-actions"><Select label="统计时间范围" value={period} onChange={setPeriod} options={periods} /><button className="primary-button" onClick={() => open("新建文章")}><Plus size={15} />新建创作</button></div></div>
+    <div className="center-column"><header className="topbar"><div className="header-left"><IconButton icon={PanelLeft} label={sidebar.open ? "收起导航栏" : "展开导航栏"} onClick={sidebar.toggle} /><span className="breadcrumb">工作台</span><span className="slash">/</span><span>{pageTitle}</span></div><div className="header-right"><div className="global-search"><Search size={15} /><input aria-label={page === "templates" ? "全局搜索模板" : "搜索文章"} placeholder="搜索内容…" value={search} onChange={e => setSearch(e.target.value)} /><span className="search-hint">搜索</span></div><IconButton icon={dark ? Moon : Sun} label="切换明暗主题" onClick={() => setDark(!dark)} /></div></header>
+      {page === "templates" ? <TemplateLibrary globalSearch={search} /> : page === "articles" ? <ArticleLibrary globalSearch={search} /> : <main><div className="page-heading"><h1>创作概览 <span>让好内容持续发生。</span></h1><div className="heading-actions"><Select label="统计时间范围" value={period} onChange={setPeriod} options={periods} /><button className="primary-button" onClick={() => open("新建文章")}><Plus size={15} />新建创作</button></div></div>
 
       <Overview data={dataset} dark={dark} days={Number(period)} now={now} />
       <section className="quick-actions" aria-label="创作快捷入口">{actions.map(([Icon, title, desc]) => <button key={title} onClick={() => open(title)}><span className="quick-icon"><Icon size={20} strokeWidth={1.5} /></span><span><strong>{title}</strong><small>{desc}</small></span><ArrowUpRight size={15} /></button>)}</section>
