@@ -131,6 +131,8 @@
 @media(prefers-reduced-motion:reduce) { .spinner,.skeleton,.skeletonPaper i,.skeletonPaper > div { animation: none; } }
 .coverImage { position: relative; width: 100%; height: 100%; }
 .coverImageLoading { position: absolute; inset: 0; border-radius: 0; }
+.componentCanvas { margin: 0 -32px -48px; padding: 1px 32px 24px; min-height: 50vh; background: color-mix(in srgb, var(--bg) 90%, #53647d 10%); }
+.collectionCanvas { padding-top: 24px; }
 .componentMasonry { columns: 4; column-gap: 20px; }
 .nativeItem { display: inline-block; width: 100%; min-width: 0; margin-bottom: 20px; break-inside: avoid; vertical-align: top; }
 .nativeSurface { position: relative; border: 1px solid var(--line); border-radius: 11px; background: white; }
@@ -138,9 +140,9 @@
 .nativeTags { height: auto; flex-wrap: wrap; margin: 8px 0 0; overflow: visible; }
 .nativeActions { position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; padding: 3px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); opacity: 0; transition: opacity .15s; }
 .nativeSurface:hover .nativeActions, .nativeSurface:focus-within .nativeActions { opacity: 1; }
-@media(max-width:1250px) { .componentMasonry { columns: 3; column-gap: 16px; } .nativeItem { margin-bottom: 16px; } }
+@media(max-width:1250px) { .componentCanvas { margin: 0 -24px -40px; padding-inline: 24px; } .componentMasonry { columns: 3; column-gap: 16px; } .nativeItem { margin-bottom: 16px; } }
 @media(max-width:1020px) { .componentMasonry { columns: 2; } }
-@media(max-width:760px) { .componentMasonry { column-gap: 12px; } .nativeItem { margin-bottom: 12px; } }
+@media(max-width:760px) { .componentCanvas { margin: 0 -16px -36px; padding-inline: 16px; } .componentMasonry { column-gap: 12px; } .nativeItem { margin-bottom: 12px; } }
 @media(max-width:420px) { .componentMasonry { columns: 1; } }
 @media(hover:none) { .nativeActions { position: static; width: fit-content; margin: 0 8px 8px auto; opacity: 1; } }
 @media(prefers-reduced-motion:reduce) { .nativeActions { transition: none; } }
